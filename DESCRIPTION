@@ -1,0 +1,23 @@
+Package: Accumulated.Temperature
+Title: Calculation of the accumulated temperature
+Version: 0.0.0.9000
+Authors@R: 
+    person("Lichun", "Huang", , "lchuang@163.com", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: This app is designed to calculate the accumulated temerature
+    in specified date range. This information is useful to support the
+    decision made on crop growth
+License: MIT + file LICENSE
+Encoding: UTF-8
+Language: es
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.0.0
+Imports: 
+    echarts4r,
+    pkgload,
+    shiny,
+    shinydashboard,
+    shinydashboardPlus
+Depends: 
+    R (>= 2.10)
+LazyData: true
