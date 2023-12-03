@@ -12,7 +12,7 @@ ui <- dashboardPage(
   dashboardBody(
     tags$style("body { background-color: ghostwhite}"),
     box(
-      "请按照条件输入",
+      "请按照条件输入(温度数据只能提供2010.10-2023.11)",
       id = "inputbox",
       collapsible = TRUE,
       closable = TRUE,
@@ -31,6 +31,7 @@ ui <- dashboardPage(
       textOutput("continous_day"),
       textOutput("accumulated_t"),
       textOutput("effective_a_t"),
+      textOutput("day_duration"),
       echarts4rOutput("plot")
     )
   )
@@ -47,6 +48,9 @@ server <- function(input, output, session) {
     plant_zero <- isolate(input$obs)
     days <- which(date_range$TAVG>=plant_zero)
     day_count <- length(days )
+    output$day_duration<- renderText(
+      paste("选择时期历时:",nrow(date_range),"天")
+    )
     output$daysmax <- renderText(
       paste("大于生物学零点的总数为:",day_count,"天")
     )
