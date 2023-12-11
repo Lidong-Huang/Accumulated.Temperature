@@ -154,11 +154,15 @@
                     width = 6,
                     div(
                       class = "custom-input",
-                      dateInput("start.date", "开始播种日期", value = "2012-09-18")
+                      dateInput("start.date", "出苗日期",
+                                value = "2023-06-02",
+                                language = "zh-CN")
                     ),
                     div(
                       class = "custom-input",
-                      dateInput("end.date", "收获日期", value = "2013-09-17")
+                      dateInput("end.date", "成熟日期",
+                                value = "2023-09-17",
+                                language = "zh-CN")
                     ),
                     div(
                       class = "custom-input",
@@ -190,15 +194,19 @@
   )
   server <- function(input, output, session) {
     observeEvent(input$done, {
-      date_range <- reactive(subset(dat1,
+    if(input$start.date<"2023-11-01"&input$end.date<="2023-11-01"
+       &input$start.date<input$end.date)
+    {
+       date_range <- reactive(subset(dat1,
                                     DATE>=input$start.date&
                                       DATE<=input$end.date))
+
       date_range <-  isolate(date_range())
       plant_zero <- isolate(input$obs)
       days <- which(date_range$TAVG>=plant_zero)
       day_count <- length(days )
       output$day_duration<- renderText(
-        paste("选择时期历时:",nrow(date_range),"天")
+        paste("选择时期历时:",input$end.date-input$start.date,"天")
       )
       output$daysmax <- renderText(
         paste("大于生物学零点的总数为:",day_count,"天")
@@ -293,6 +301,33 @@
         state <- ifelse(input$mybox$collapsed,"collapsed", "uncollapsed")
         paste("My box is", state)
       })
+    }
+  else
+    {
+          output$day_duration<- renderText(
+          paste("选择时期历时:",input$end.date-input$start.date,"天")
+        )
+        output$daysmax <- renderText(
+          paste("没有基础气温数据，不能计算")
+        )
+
+        output$continous_day <- renderText(
+          paste("没有基础气温数据，不能计算")
+        )
+
+        output$accumulated_t <- renderText(
+          paste("没有基础气温数据，不能计算")
+        )
+
+        output$effective_a_t <- renderText(
+          paste("没有基础气温数据，不能计算")
+        )
+        output$plot <-  renderEcharts4r(NULL)
+        output$box_state <- renderText({
+          state <- ifelse(input$mybox$collapsed,"collapsed", "uncollapsed")
+          paste("My box is", state)
+        })
+    }
     })
   }
   shinyApp(ui, server)
